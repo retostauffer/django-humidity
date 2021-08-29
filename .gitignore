@@ -1,11 +1,15 @@
 
 
-# Ignore db 
-db.sqlite3
+# Ignore some files and folders
+/djangohumidity/db.sqlite3
+/venv
+
 
 # Ignore npm modules
 djangohumidity/static/node_modules
 
 # Ignore swap files
 *.swp
+
+# Ignore pycache globally
 __pycache__
