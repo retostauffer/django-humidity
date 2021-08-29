@@ -8,4 +8,5 @@ run:
 migrate:
 	python manage.py migrate
 
-
+npm:
+	(cd djangohumidity && npm install)

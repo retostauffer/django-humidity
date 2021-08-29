@@ -3,6 +3,9 @@
 # Ignore db 
 db.sqlite3
 
+# Ignore npm modules
+djangohumidity/static/node_modules
+
 # Ignore swap files
 *.swp
 __pycache__

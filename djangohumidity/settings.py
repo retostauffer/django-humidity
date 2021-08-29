@@ -126,7 +126,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "root")
 
 STATIcFILES_DIRS = [
         os.path.join(BASE_DIR, "static"),
-        os.path.join(BASE_DIR, "bootstrap"),
+        os.path.join(BASE_DIR, "node_modules"),
 ]
 
 
