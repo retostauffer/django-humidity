@@ -36,7 +36,7 @@ def store(request):
 
     # Checking key
     if not error and not args["key"] in settings.API_KEYS:
-        error = "Invalid API key."
+        error = "Error: \"{:s}\" is an invalid API key.".format(args["key"])
 
     # Processing data
     if not error:
@@ -64,7 +64,7 @@ def store(request):
 
         # Store data
         param.data_set.update_or_create(defaults = dict(data_value = value),
-                                        data_timestamp = dt.fromtimestamp(timestamp))
+                                        data_datetime = dt.fromtimestamp(timestamp))
 
 
 
