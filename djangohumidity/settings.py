@@ -29,7 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["hum.retostauffer.org", "127.0.0.1"]
 
 # Access keys to store the data
-API_KEYS = ["1234"]
+API_KEYS = ["kd3489135aaDF"]
 
 # Setting default time zone
 TIME_ZONE = "UTC"
