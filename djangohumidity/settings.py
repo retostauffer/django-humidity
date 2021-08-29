@@ -26,9 +26,13 @@ SECRET_KEY = 'django-insecure-xu^2+f_442jjfot$iet+q^d$-@dpax=5-o204ec66z^kt^bu53
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
 ALLOWED_HOSTS = []
 
+# Access keys to store the data
+API_KEYS = ["1234"]
+
+# Setting default time zone
+TIME_ZONE = "UTC"
 
 # Application definition
 
@@ -41,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'compressor',
+    'djangohumidity',
 ]
 
 COMPRESS_PRECOMPILERS = (

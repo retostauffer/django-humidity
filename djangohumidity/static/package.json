@@ -11,6 +11,9 @@
   "dependencies": {
     "@popperjs/core": "2.9.3",
     "bootstrap": "5.1.0",
-    "jquery": "3.6.0"
+    "jquery": "3.6.0",
+    "jquery-dateformat": "^1.0.4",
+    "jquery-datetimepicker": "^2.5.21",
+    "plotly.js": "2.4.1"
   }
 }

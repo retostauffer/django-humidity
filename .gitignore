@@ -2,6 +2,8 @@
 
 # Ignore some files and folders
 /djangohumidity/db.sqlite3
+/djangohumidity/migrations
+/CACHE
 /venv
 
 

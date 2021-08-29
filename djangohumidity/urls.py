@@ -23,11 +23,14 @@ from django.conf.urls.static import static
 from django.conf.urls import url
 
 from . import views
-# form . import api
+from . import api
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.home, name = "home"),
+    path("api/store", api.store, name = "api/store"),
+    path("dataview/<int:sensor_id>/<int:param_id>", views.dataview),
+    path("all", views.dataall),
 ] + static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
 
 

@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block js %}
+$(document).ready(function() {
+    var rawdata = JSON.parse(document.getElementById('json-data').textContent);
+
+    // Setting up plotly plot
+    var trace1 = {
+      type: "scatter",
+      mode: "lines",
+      name: 'AAPL High',
+      x: rawdata.datetime,
+      y: rawdata.value,
+      line: {color: '#17BECF'}
+    }
+
+    // Calculating the x-range needed
+    var range = [Math.max.apply(Math, rawdata.timestamp),
+                 Math.max.apply(Math, rawdata.timestamp)]
+    range = [$.format.date(new Date(range[0] * 1e3),           "yyyy-MM-dd"),
+             $.format.date(new Date((range[1] + 86400) * 1e3), "yyyy-MM-dd")]
+
+
+    // Create final data object 
+    var data = [trace1];
+    console.log(data)
+
+    var layout = {
+      title: 'Time Series with Rangeslider',
+      xaxis: {
+        autorange: true,
+        range: range,
+        rangeselector: {buttons: [
+            {
+              count: 1,
+              label: '1m',
+              step: 'month',
+              stepmode: 'backward'
+            },
+            {
+              count: 6,
+              label: '6m',
+              step: 'month',
+              stepmode: 'backward'
+            },
+            {step: 'all'}
+          ]},
+        rangeslider: {range: range},
+        type: 'date'
+      },
+      yaxis: {
+        autorange: true,
+        range: [0, 110],
+        type: 'linear'
+      }
+    };
+    
+    Plotly.newPlot('myDiv', data, layout);
+
+});
+{% endblock %}
+
+{% block content %}
+
+
+<!-- sensor navigation -->
+{% for sensor in sensors %}
+    <div class="container" style="padding-bottom: 1em;">
+        <button type="button" class="btn btn-secondary">
+            {{ sensor.sensor.name }} {{ sensor.sensor.type }} ({{ sensor.sensor.id}})
+        </button>
+        {% for par in sensor.parameter %}
+            <a href="/dataview/{{ sensor.sensor.id }}/{{ par.id }}" target="_self">
+                <button type="button" class="btn btn-primary">
+                    {{ par.name }} ({{par.id}})
+                </button>
+            </a>
+        {% endfor %}
+    </div>
+{% endfor %}
+
+<!-- plotly.js plot -->
+<script src="{% static "node_modules/plotly.js/dist/plotly-basic.min.js" %}"></script>
+<script src="{% static "node_modules/jquery-dateformat/dist/jquery-dateformat.min.js" %}"></script>
+
+{{ data | json_script:"json-data" }}
+
+<div id="myDiv" style="width: 100%; height: 600px;"></div>
+
+{% endblock  %}
