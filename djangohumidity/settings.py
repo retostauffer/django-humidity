@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-xu^2+f_442jjfot$iet+q^d$-@dpax=5-o204ec66z^kt^bu53
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["hum.retostauffer.org"]
+ALLOWED_HOSTS = ["hum.retostauffer.org", "127.0.0.1"]
 
 # Access keys to store the data
 API_KEYS = ["1234"]
