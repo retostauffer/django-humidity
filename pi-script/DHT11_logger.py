@@ -7,54 +7,32 @@ import datetime
 import sys
 
 # Setting up the sensors
-devs = {"s1": DHT11(board.D18),
-        "s2": DHT11(board.D17),
-        "s3": DHT11(board.D27),
-        "s4": DHT11(board.D22)}
+SENSORS = {"Sensor_1": DHT11(board.D18),
+           "Sensor_2": DHT11(board.D17),
+           "Sensor_3": DHT11(board.D27),
+           "Sensor_4": DHT11(board.D22)}
 
+# Number of trys when getting an NA reading
+NTRY = 4
 
-first = True
+current = {}
+for sensor_name,obj in SENSORS.items():
 
-while True:
-    current = {}
-    for key,sens in devs.items():
+    attempt = 0
+    while attempt < NTRY:
+        attempt += 1
+        print("   Reading \"{:s}\" now".format(sensor_name))
         try:
-            sens.measure()
+            obj.measure()
             t = sens.temperature
             r = sens.humidity
-            #print("Sensor {:s}:      {:d}     {:d}".format(key, t, r))
-            current["{:s}_t".format(key)] = t
-            current["{:s}_rh".format(key)] = r
+            print("         Temperature:   {:d}".format(t))
+            print("         Rel. humidity: {:d}".format(t)
+            break
         except RuntimeError:
-            #print("Failed for this one ...")
-            current["{:s}_t".format(key)] = "NA"
-            current["{:s}_rh".format(key)] = "NA"
-
-    # Printing header
-    if first:
-        header = ["timestamp"]
-        for sens in devs:
-            for val in ["t", "rh"]:
-                key = "{:s}_{:s}".format(sens, val)
-                header.append(key)
-        print("; ".join(header))
-        first = False
-
-    # Print measurements
-    # Start with fresh list solely
-    # containing the timestamp as string.
-    values = ["{:.0f}".format(datetime.datetime.now().timestamp())]
-    for sens in devs:
-        for val in ["t", "rh"]:
-            key = "{:s}_{:s}".format(sens, val)
-            val = current[key]
-            if isinstance(val, int):
-                val = "{:d}".format(val)
-
-            values.append(val)
-
-    print("; ".join(values))
-    sys.stdout.flush()
+            print("         Reading failed, eventually repeat ...")
 
 
-    sleep(10)
+
+
+
