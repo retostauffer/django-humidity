@@ -40,13 +40,12 @@ def send_data(sensor, param, timestamp, value, BASEURL = "https://hum.retostauff
                 param     = param,
                 timestamp = timestamp,
                 value     = value)
-    print(BASEURL)
-    print(data)
 
     from urllib import request, parse
     args = []
     for key,val in data.items(): args.append("{:s}={:s}".format(key, "{:d}".format(val) if isinstance(val, int) else val))
     url = "{:s}?{:s}".format(BASEURL, "&".join(args))
+    print(url)
     response = request.urlopen(url)
     return response.read()
 
