@@ -3,6 +3,8 @@
 
 from djangohumidity.models import *
 from django.shortcuts import render
+from django.views.decorators.cache import never_cache
+
 
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
@@ -17,6 +19,7 @@ def home(request):
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
+@never_cache
 def dataview(request, sensor_id, param_id):
 
     from .datahandler import get_data
@@ -41,6 +44,7 @@ def dataview(request, sensor_id, param_id):
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
+@never_cache
 def dataall(request):
 
     from .datahandler import get_data

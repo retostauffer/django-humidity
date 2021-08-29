@@ -79,7 +79,7 @@ for sensor_name,obj in SENSORS.items():
         print(content)
 
     if not r is None:
-        content = send_data(sensor_name, "temperature", timestamp, t)
+        content = send_data(sensor_name, "humidity", timestamp, r)
         print(content)
 
 

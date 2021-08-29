@@ -3,12 +3,16 @@
 from django.conf import settings
 from django.shortcuts import HttpResponse
 from datetime import datetime as dt
+from django.utils.timezone import make_aware
 
 import json
 import re
 
 from .models import *
 
+from django.views.decorators.cache import never_cache
+
+@never_cache
 def store(request):
     """
 
@@ -64,7 +68,7 @@ def store(request):
 
         # Store data
         param.data_set.update_or_create(defaults = dict(data_value = value),
-                                        data_datetime = dt.fromtimestamp(timestamp))
+                                        data_datetime = make_aware(dt.fromtimestamp(timestamp)))
 
 
 
