@@ -31,6 +31,10 @@ ALLOWED_HOSTS = ["hum.retostauffer.org", "127.0.0.1"]
 # Access keys to store the data
 API_KEYS = ["kd3489135aaDF"]
 
+# Login/Logout redirect
+LOGIN_REDIRECT_URL = "/all"
+LOGOUT_REDIRECT_URL = "/"
+
 # Setting default time zone
 TIME_ZONE = "UTC"
 
