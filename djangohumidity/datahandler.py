@@ -1,12 +1,12 @@
 
 
 from django.conf import settings
-import datetime
+import datetime as dt
 
 import json
 from .models import *
 
-def get_data(sensor_id, param_id, ndays = 2):
+def get_data(sensor_id, param_id, ndays = 7):
 
     if not isinstance(ndays, int):
         raise TypeError("ndays must be integer")
@@ -14,8 +14,8 @@ def get_data(sensor_id, param_id, ndays = 2):
         raise TypeError("ndays must be larger than 0")
 
     # Starting timestamp
-    now   = datetime.datetime.now()
-    start = now - datetime.deltatime(ndays)
+    now   = dt.datetime.now()
+    start = now - dt.timedelta(ndays)
 
     # Loading the parameter object
     param = Sensor.objects.get(id = sensor_id).parameter_set.all().get(id = param_id)
