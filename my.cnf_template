@@ -10,4 +10,5 @@ password = PASSWORD
 default-character-set = utf8
 
 [config]
-SECRET_KEY = abcde
+SECRET_KEY = secret_django_app_key
+API_KEY    = secret_api_key
