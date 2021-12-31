@@ -97,8 +97,8 @@ def send_data(value, timestamp, cache, apikey, BASEURL = "https://hum.retostauff
 # --------------------------------------------------------------
 class DataCacheFile:
 
-    def __init__(self, sensor_name, param, maxage = 15 * 3600):
-        """DataCacheFile(sensor_name, param, maxage = 15 * 3600)
+    def __init__(self, sensor_name, param, maxage = 15 * 60):
+        """DataCacheFile(sensor_name, param, maxage = 15 * 60)
 
         Arguments
         =========
