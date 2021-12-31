@@ -8,6 +8,9 @@ from django.utils.timezone import make_aware
 import json
 import re
 
+import logging
+logger = logging.getLogger()
+
 from .models import *
 
 from django.views.decorators.cache import never_cache
@@ -45,30 +48,35 @@ def store(request):
     # Processing data
     if not error:
 
+        error = []
+
         # Checking if all arguments are valid
         try:
             timestamp = int(args["timestamp"])
         except:
-            raise ValueError("timestamp cannot be converted to integer.")
+            error.append("timestamp cannot be converted into integer")
 
         try:
             value = float(args["value"])
         except:
-            raise ValueError("timestamp cannot be converted to integer.")
+            error.append("value cannot be converted to float")
 
         # Find sensor and parameter
-        sens = Sensor.objects.get(sensor_name = args["sensor"])
+        sens = Sensor.objects.get(sensor_name__exact = args["sensor"])
         if not sens:
-            raise ValueError("Sensor \"{:s}\" not found.".format(args["sensor"]))
+            error.append("Sensor \"{:s}\" not found.".format(args["sensor"]))
 
-        param = sens.parameter_set.all().get(param_name = args["param"])
+        param = sens.parameter_set.get(param_name__exact = args["param"])
         if not param:
-            raise ValueError("No parameter \"{:s}\" for sensor \"{:s}\" found.".format(
+            error.append("No parameter \"{:s}\" for sensor \"{:s}\" found.".format(
                             args["param"], args["sensor"]))
 
         # Store data
-        param.data_set.update_or_create(defaults = dict(data_value = value),
-                                        data_datetime = make_aware(dt.fromtimestamp(timestamp)))
+        if len(error) == 0:
+            param.data_set.update_or_create(defaults = dict(data_value = value),
+                                            data_datetime = make_aware(dt.fromtimestamp(timestamp)))
+        else:
+            error = dict(error = error)
 
 
 
