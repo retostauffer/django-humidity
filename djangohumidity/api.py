@@ -90,6 +90,16 @@ def store(request):
     return HttpResponse(res, content_type = content_type) if request else res
 
 
+# simple magnus equation; parmaeters Sonntag 1990
+def dewpoint(t, rh):
+    """dewpoint(t, rh)
+
+    Calculate dew point temperature via magnus equation.
+    """
+    from numpy import log, round
+    t = t + 273.15
+    return round(log(rh / 100.) + (17.62 * t) / (243.12 + t), 1)
+
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 def get_sensors():
@@ -216,6 +226,7 @@ def data(request, ndays = 7):
 
     from json import dumps
     from .api import get_data
+    from .api import dewpoint
     from .models import Parameter, Sensor
     import pandas as pd
     from numpy import floor, ceil
@@ -253,12 +264,6 @@ def data(request, ndays = 7):
     data = data.rename(columns = {"index": "timestamp"})
     data.timestamp = [int(x.timestamp()) for x in data.timestamp]
 
-
-    # simple magnus equation; parmaeters Sonntag 1990
-    def dewpoint(t, rh):
-        from numpy import log, round
-        t = t + 273.15
-        return round(log(rh / 100.) + (17.62 * t) / (243.12 + t), 1)
     data["Sensor_1_dewpoint"] = dewpoint(data.Sensor_1_temperature, data.Sensor_1_humidity)
 
     res = data.tail().to_dict(orient = "list")

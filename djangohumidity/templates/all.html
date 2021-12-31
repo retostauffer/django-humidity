@@ -13,6 +13,7 @@
 
         var temperature = JSON.parse(document.getElementById('json-temperature').textContent);
         var humidity    = JSON.parse(document.getElementById('json-humidity').textContent);
+        var dewpoint    = JSON.parse(document.getElementById('json-dewpoint').textContent);
 
         // Create final data object 
 
@@ -56,9 +57,22 @@
           }
         };
 
+        var layout_dewpoint = {
+          title: 'Dewpoint Temperature',
+          xaxis: {
+            autorange: true,
+            type: 'date'
+          },
+          yaxis: {
+            autorange: true,
+            type: 'linear'
+          }
+        };
+
         console.log(temperature)
         Plotly.newPlot('plottemperature', temperature, layout_temperature);
         Plotly.newPlot('plothumidity',    humidity,    layout_humidity);
+        Plotly.newPlot('plotdewpoint',    dewpoint,    layout_dewpoint);
 
     });
     {% endif %}
@@ -76,9 +90,11 @@
 
         {{ temperature | json_script:"json-temperature" }}
         {{ humidity | json_script:"json-humidity" }}
+        {{ dewpoint | json_script:"json-dewpoint" }}
 
         <div id="plottemperature" style="width: 100%; height: 600px;"></div>
         <div id="plothumidity" style="width: 100%; height: 600px;"></div>
+        <div id="plotdewpoint" style="width: 100%; height: 600px;"></div>
     {% else %}
         <h2>Requires login</h2>
         <p>Sorry, login required (<a href="/accounts/login" target="_self">login</a>).
