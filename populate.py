@@ -30,6 +30,8 @@ for key,val in SENSORS.items():
 
 print("Number of sensors: {:d}".format(len(Sensor.objects.all())))
 
+sys.exit('exit here')
+
 # Filling in some random data
 config = dict(s1_t  = ("Sensor_1", "temperature"),
               s1_rh = ("Sensor_1", "humidity"),
