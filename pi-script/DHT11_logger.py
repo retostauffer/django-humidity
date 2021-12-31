@@ -76,14 +76,17 @@ def send_data(value, timestamp, cache, apikey, BASEURL = "https://hum.retostauff
     if not cache.get("last_value") or abs(value - cache.get("last_value")) > 0.001:
         from urllib import request, parse
         args = []
-        print(data)
+        #print(data)
         for key,val in data.items():
             args.append("{:s}={:s}".format(key, "{:d}".format(val) if isinstance(val, int) else val))
         url = "{:s}?{:s}".format(BASEURL, "&".join(args))
-        print(url)
 
         response = request.urlopen(url)
         res = response.read()
+
+        # Store new (latest) value
+        with open(cache.get("file"), "w") as fid: fid.write(f"{value}")
+
     else:
         res = {"info": "No need to send current data."}
     return res
@@ -231,17 +234,3 @@ if __name__ == "__main__":
         content = send_data(r, timestamp, cache["humidity"], apikey)
         print(content)
 
-        continue
-
-        # If we got some values
-        if not t is None and not float(t) == cache["temperature"].get("last_value"):
-            content = send_data(sensor_name, "temperature", timestamp, t)
-            print(content)
-    
-        if not r is None and not float(t) == cache["relhum"].get("last_value"):
-            content = send_data(sensor_name, "humidity", timestamp, r)
-            print(content)
-    
-    
-    
-    
