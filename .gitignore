@@ -5,6 +5,7 @@
 /djangohumidity/migrations
 /CACHE
 /venv
+/my.cnf
 
 
 # Ignore npm modules

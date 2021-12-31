@@ -6,7 +6,7 @@ from django.db import models
 class Sensor(models.Model):
 
     # Sensors (basically piece of hardware)
-    sensor_name = models.CharField(max_length = 15, null = False)
+    sensor_name = models.CharField(max_length = 15, unique = True, null = False)
     sensor_type = models.CharField(max_length = 15, null = False)
     sensor_desc = models.CharField(max_length = 100, null = True)
     sensor_color = models.CharField(max_length = 9, null = False)

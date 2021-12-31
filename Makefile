@@ -2,12 +2,19 @@
 
 
 exe="venv/bin/python3"
+APP_NAME="djangohumidity"
 
 run:
 	${exe} manage.py runserver
 
 migrate:
+	#make killdb
+	-rm -rf ${APP_NAME}/migrations/*
+	# Clearing db first
+	${exe} manage.py makemigrations ${APP_NAME} && \
+	${exe} manage.py migrate --fake ${APP_NAME} zero && \
 	${exe} manage.py migrate
+
 
 npm:
 	(cd djangohumidity/static && npm install)
@@ -15,21 +22,15 @@ npm:
 venv:
 	virtualenv -p python3 venv
 	#source venv/bin/activate
-	venv/bin/pip3 install -r requirements.txt:
+	venv/bin/pip3 install -r requirements.txt
 
 
 .PHONY: populate
 populate:
-	-rm -r djangohumidity/migrations
-	-rm djangohumidity/db.sqlite3
-	${exe} manage.py makemigrations djangohumidity
+	bash cleardb.sh
 	make migrate
 	${exe} manage.py shell < populate.py
-	sqlite3 djangohumidity/db.sqlite3 '.tables'
-	sqlite3 djangohumidity/db.sqlite3 --header 'SELECT * FROM djangohumidity_sensor'
-	sqlite3 djangohumidity/db.sqlite3 --header 'SELECT * FROM djangohumidity_parameter'
-	sqlite3 djangohumidity/db.sqlite3 --header 'SELECT * FROM djangohumidity_data limit 10'
 
 
 shell:
-	python manage.py shell
+	${exe} manage.py shell
