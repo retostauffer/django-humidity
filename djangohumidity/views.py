@@ -15,29 +15,16 @@ def home(request):
 
     return render(request, "index.html", context)
 
-
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 @never_cache
 def dataview(request, sensor_id, param_id):
 
-    from .datahandler import get_data
+    from .api import get_data_dict
 
-    # Loading all available sensors and defined parameters
-    # for the navigation part.
-    sensors = []
-    for sens in Sensor.objects.all():
-        params = []
-        for par in sens.parameter_set.all():
-            params.append(dict(id = par.id, name = par.param_name))
-        sensors.append(dict(sensor = dict(id = sens.id, type = sens.sensor_type, name = sens.sensor_name),
-                            parameter = params))
+    context = get_data_dict(sensor_id, param_id)
 
-
-    data = get_data(sensor_id, param_id)
-
-    context = dict(data = data, sensors = sensors)
     return render(request, "dataview.html", context)
 
 

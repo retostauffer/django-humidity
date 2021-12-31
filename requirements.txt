@@ -6,3 +6,4 @@ django_compressor
 django-libsass
 ipython
 mysqlclient
+pandas

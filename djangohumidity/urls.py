@@ -29,6 +29,7 @@ urlpatterns = [
     path("accounts/", include('django.contrib.auth.urls')),
     path("", views.home, name = "home"),
     path("api/store", api.store, name = "api/store"),
+    path("api/data", api.data, name = "api/data"),
     path("dataview/<int:sensor_id>/<int:param_id>", views.dataview),
     path("all", views.dataall),
 ] + static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
