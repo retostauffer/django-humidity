@@ -25,7 +25,7 @@ def get_data(sensor_id, param_id, ndays = 7):
     values    = []
     datetime  = []
     #for rec in param.data_set.all():
-    for rec in param.data_set.filter(data_datetime__gt = start):
+    for rec in param.data_set.filter(data_datetime__gte = start):
         values.append(rec.data_value)
         datetime.append(rec.data_datetime.isoformat())
 
