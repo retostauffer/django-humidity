@@ -59,13 +59,13 @@ def dataall(request):
 
         # Adding/preparing temperature for plotly.js
         tmp_t  = get_data(sens.id, t.id)
-        tmp_t  = dict(type = "scatter", mode = "lines", name = sens.sensor_name,
+        tmp_t  = dict(type = "scatter", mode = "lines+markers", name = sens.sensor_name,
                       x = tmp_t["datetime"], y = tmp_t["value"],
                       line = dict(color = sens.sensor_color))
 
         # Adding/preparing humidity for plotly.js
         tmp_rh = get_data(sens.id, rh.id)
-        tmp_rh = dict(type = "scatter", mode = "lines", name = sens.sensor_name,
+        tmp_rh = dict(type = "scatter", mode = "lines+markers", name = sens.sensor_name,
                    x = tmp_rh["datetime"], y = tmp_rh["value"],
                    line = dict(color = sens.sensor_color))
 

@@ -24,14 +24,14 @@
             rangeselector: {buttons: [
                 {
                   count: 1,
-                  label: '1m',
-                  step: 'month',
+                  label: '1d',
+                  step: 'day',
                   stepmode: 'backward'
                 },
                 {
-                  count: 6,
-                  label: '6m',
-                  step: 'month',
+                  count: 3,
+                  label: '3d',
+                  step: 'day',
                   stepmode: 'backward'
                 },
                 {step: 'all'}
@@ -49,6 +49,21 @@
           title: 'Relative Humidity',
           xaxis: {
             autorange: true,
+            rangeselector: {buttons: [
+                {
+                  count: 1,
+                  label: '1d',
+                  step: 'day',
+                  stepmode: 'backward'
+                },
+                {
+                  count: 3,
+                  label: '3d',
+                  step: 'day',
+                  stepmode: 'backward'
+                },
+                {step: 'all'}
+              ]},
             type: 'date'
           },
           yaxis: {
@@ -61,6 +76,21 @@
           title: 'Dewpoint Temperature',
           xaxis: {
             autorange: true,
+            rangeselector: {buttons: [
+                {
+                  count: 1,
+                  label: '1d',
+                  step: 'day',
+                  stepmode: 'backward'
+                },
+                {
+                  count: 3,
+                  label: '3d',
+                  step: 'day',
+                  stepmode: 'backward'
+                },
+                {step: 'all'}
+              ]},
             type: 'date'
           },
           yaxis: {
