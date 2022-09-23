@@ -15,11 +15,10 @@
 
 import os
 import sys
-import board
+import argparse
 
 import Adafruit_DHT as AD
-
-from time import sleep
+from configparser import ConfigParser
 from datetime import datetime as dt
 
 
@@ -34,7 +33,8 @@ NTRY = 4
 
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
-def send_data(value, timestamp, cache, apikey, BASEURL = "https://hum.retostauffer.org/api/store"):
+def send_data(value, timestamp, cache, apikey, force = False,
+              BASEURL = "https://hum.retostauffer.org/api/store"):
     """
     Args
     ====
@@ -46,6 +46,9 @@ def send_data(value, timestamp, cache, apikey, BASEURL = "https://hum.retostauff
         Object for handling data cache.
     apikey : str
         Secret api Key
+    force : bool
+        If set to True, the current value is sent no matter if it is the
+        same as sent before.
     BASEURL : str
         URL of the API endpoint. Default set.
 
@@ -63,6 +66,7 @@ def send_data(value, timestamp, cache, apikey, BASEURL = "https://hum.retostauff
         raise TypeError("'timestamp' must be integer")
     if not isinstance(cache, DataCacheFile):
         raise TypeError("'cache' must be of class DataCacheFile")
+    assert isinstance(force, bool), TypeError("argument 'force' must be boolean")
 
     data = dict(key       = apikey,
                 sensor    = cache.get("sensor_name"),
@@ -74,7 +78,7 @@ def send_data(value, timestamp, cache, apikey, BASEURL = "https://hum.retostauff
     # We only send data if the current value is not the same
     # as cache.get("last_value"). "last_value" is None if we 
     # have no cache file or the cache file is too old.
-    if not cache.get("last_value") or abs(value - cache.get("last_value")) > 0.001:
+    if force or (not cache.get("last_value") or abs(value - cache.get("last_value")) > 0.001):
         from urllib import request, parse
         args = []
         #print(data)
@@ -197,8 +201,16 @@ class DataCacheFile:
 # --------------------------------------------------------------------
 if __name__ == "__main__":
 
+
+    parser = argparse.ArgumentParser(description = "Some options I use to play around")
+    parser.add_argument("-f", "--force", action = "store_true",
+            help = "If set, force submission of reading even if the value has not changed within the last couple of minutes.")
+    parser.add_argument("-p", "--pins", metavar = "pins",
+            type = int, nargs = "+", default = [18, 17, 27, 22],
+            help = "GPIO pins to be read (if defined as sensors)")
+    args = parser.parse_args()
+
     # Loading API key
-    from configparser import ConfigParser
     CNF = ConfigParser()
     CNF.read("../my.cnf")
     apikey = CNF.get("config", "API_KEY")
@@ -206,8 +218,10 @@ if __name__ == "__main__":
     current = {}
 
     for sname,sconfig in SENSORS.items():
-        t = None
-        r = None
+        if not sconfig["pin"] in args.pins:
+            print(f"   Skipping pin {sconfig['pin']}, not in -p/--pins args (or default; {args.pins=}")
+            continue
+
         print(f"   Reading \"{sname}\"")
 
         # Our files to cache/store latest obs
@@ -224,8 +238,10 @@ if __name__ == "__main__":
         print(f"         Temperature:   {t}")
         print(f"         Rel. humidity: {r}")
     
-        content = send_data(int(t), timestamp, cache["temperature"], apikey)
+        content = send_data(int(t), timestamp, cache["temperature"], apikey, args.force)
         print(content)
-        content = send_data(int(r), timestamp, cache["humidity"], apikey)
+        content = send_data(int(r), timestamp, cache["humidity"], apikey, args.force)
         print(content)
+
+        del t, r
 
