@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 # --------------------------------------------------------------------
 # Looping over a set of pre-defined sensors; reading parameters and
 # store them using the corresponding api/store endpoint on my server.
@@ -17,21 +17,16 @@ import os
 import sys
 import board
 
-import Adafruit_DHT as AD
-
-#k = AD.read_retry(AD.DHT11, 18)
-#sys.exit(0)
-
-
+from adafruit_dht import DHT11
 from time import sleep
 from datetime import datetime as dt
 
 
 # Setting up the sensors
-SENSORS = {"Sensor_1": dict(pin = 18, type = AD.DHT11),
-           "Sensor_2": dict(pin = 17, type = AD.DHT11),
-           "Sensor_3": dict(pin = 27, type = AD.DHT11),
-           "Sensor_4": dict(pin = 22, type = AD.DHT11)}
+SENSORS = {"Sensor_1": DHT11(board.D18),
+           "Sensor_2": DHT11(board.D17),
+           "Sensor_3": DHT11(board.D27),
+           "Sensor_4": DHT11(board.D22)}
 
 # Number of trys when getting an NA reading
 NTRY = 4
@@ -208,31 +203,34 @@ if __name__ == "__main__":
     apikey = CNF.get("config", "API_KEY")
 
     current = {}
-
-    for sname,sconfig in SENSORS.items():
+    for sensor_name,obj in SENSORS.items():
+    
         attempt = 0
         t = None
         r = None
-        print(f"   Reading \"{sname}\"")
+        print("   Reading \"{:s}\" now".format(sensor_name))
 
         # Our files to cache/store latest obs
         cache = {}
         for param in ["temperature", "humidity"]:
-            cache[param] = DataCacheFile(sname, param)
+            cache[param] = DataCacheFile(sensor_name, param)
 
         while attempt < NTRY:
             attempt += 1
             try:
-                [r,t] = AD.read_retry(sconfig["type"], sconfig["pin"])
+                obj.measure()
                 timestamp = int(dt.now().timestamp())
+                t = obj.temperature
+                r = obj.humidity
                 print(f"         Temperature:   {t}")
                 print(f"         Rel. humidity: {r}")
                 break
             except RuntimeError:
                 print("         Reading failed, eventually repeat ...")
     
-        content = send_data(int(t), timestamp, cache["temperature"], apikey)
+
+        content = send_data(t, timestamp, cache["temperature"], apikey)
         print(content)
-        content = send_data(int(r), timestamp, cache["humidity"], apikey)
+        content = send_data(r, timestamp, cache["humidity"], apikey)
         print(content)
 
