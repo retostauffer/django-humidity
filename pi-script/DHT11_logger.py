@@ -19,10 +19,6 @@ import board
 
 import Adafruit_DHT as AD
 
-#k = AD.read_retry(AD.DHT11, 18)
-#sys.exit(0)
-
-
 from time import sleep
 from datetime import datetime as dt
 
@@ -210,7 +206,6 @@ if __name__ == "__main__":
     current = {}
 
     for sname,sconfig in SENSORS.items():
-        attempt = 0
         t = None
         r = None
         print(f"   Reading \"{sname}\"")
@@ -220,16 +215,14 @@ if __name__ == "__main__":
         for param in ["temperature", "humidity"]:
             cache[param] = DataCacheFile(sname, param)
 
-        while attempt < NTRY:
-            attempt += 1
-            try:
-                [r,t] = AD.read_retry(sconfig["type"], sconfig["pin"])
-                timestamp = int(dt.now().timestamp())
-                print(f"         Temperature:   {t}")
-                print(f"         Rel. humidity: {r}")
-                break
-            except RuntimeError:
-                print("         Reading failed, eventually repeat ...")
+        [r,t] = AD.read_retry(sconfig["type"], sconfig["pin"])
+        if not r or not t:
+            print(f"    No/bad reading from {sname}, skip")
+            continue
+
+        timestamp = int(dt.now().timestamp())
+        print(f"         Temperature:   {t}")
+        print(f"         Rel. humidity: {r}")
     
         content = send_data(int(t), timestamp, cache["temperature"], apikey)
         print(content)
